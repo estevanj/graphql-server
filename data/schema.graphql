@@ -1,0 +1,52 @@
+type Cliente {
+  id: ID
+  nombre: String
+  apellido: String
+  empresa: String
+  emails: [Email]
+  tipo: TipoCliente
+  pedidos: [Pedido]
+}
+enum TipoCliente {
+  BASICO
+  PREMIUM
+}
+
+type Pedido {
+  producto: String
+  precio: Float
+}
+
+type Query {
+  getCliente(id: ID): Cliente
+}
+type Email {
+  email: String
+}
+
+input PedidoInput {
+  producto: String
+  precio: Float
+}
+input EmailInput {
+  email: String
+}
+input ClienteInput {
+  id: ID
+  nombre: String!
+  apellido: String
+  empresa: String
+  emails: [EmailInput]
+  tipo: TipoCliente
+  pedidos: [PedidoInput]
+}
+"""
+ Mutations para crear nuevos clientes
+"""
+type Mutation {
+  #Nombre del Resolver
+  """
+   Permite crear nuevos clientes
+  """
+  crearCliente(input: ClienteInput): Cliente
+}
