@@ -4,8 +4,16 @@ import { rejects } from 'assert'
 
 export const resolvers = {
   Query: {
-    getCliente: ({ id }) => {
-      return new Cliente(id, clientesDB[id])
+    getClientes: (root, { limit }) => {
+      return Clientes.find({}).limit(limit)
+    },
+    getCliente: (root, { id }) => {
+      return new Promise((resolve, object) => {
+        Clientes.findById(id, (error, cliente) => {
+          if (error) rejects(error)
+          else resolve(cliente)
+        })
+      })
     }
   },
   Mutation: {
@@ -19,11 +27,31 @@ export const resolvers = {
         pedidos: input.pedidos
       })
       nuevoCliente.id = nuevoCliente._id
-
       return new Promise((resolve, object) => {
         nuevoCliente.save(error => {
           if (error) rejects(error)
           else resolve(nuevoCliente)
+        })
+      })
+    },
+    actualizarCliente: (root, { input }) => {
+      return new Promise((resolve, object) => {
+        Clientes.findOneAndUpdate(
+          { _id: input.id },
+          input,
+          { new: true },
+          (error, cliente) => {
+            if (error) rejects(error)
+            else resolve(cliente)
+          }
+        )
+      })
+    },
+    eliminarCliente: (root, { id }) => {
+      return new Promise((resolve, object) => {
+        Clientes.findOneAndDelete({ _id: id }, error => {
+          if (error) rejects(error)
+          else resolve('Se elimino Correctamente')
         })
       })
     }

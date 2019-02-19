@@ -18,6 +18,7 @@ type Pedido {
 }
 
 type Query {
+  getClientes(limit: Int): [Cliente]
   getCliente(id: ID): Cliente
 }
 type Email {
@@ -41,12 +42,16 @@ input ClienteInput {
   pedidos: [PedidoInput]
 }
 """
- Mutations para crear nuevos clientes
+Mutations para crear nuevos clientes
 """
 type Mutation {
   #Nombre del Resolver
   """
-   Permite crear nuevos clientes
+  Permite crear nuevos clientes
   """
   crearCliente(input: ClienteInput): Cliente
+
+  actualizarCliente(input: ClienteInput): Cliente
+
+  eliminarCliente(id: ID!): String
 }
