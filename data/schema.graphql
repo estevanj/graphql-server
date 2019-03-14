@@ -18,8 +18,9 @@ type Pedido {
 }
 
 type Query {
-  getClientes(limit: Int): [Cliente]
+  getClientes(limit: Int, offset: Int): [Cliente]
   getCliente(id: ID): Cliente
+  totalClientes: String
 }
 type Email {
   email: String
