@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { Clientes } from './db'
+import { Clientes, Productos } from './db'
 import { rejects } from 'assert'
 
 export const resolvers = {
@@ -22,6 +22,19 @@ export const resolvers = {
         Clientes.countDocuments({}, (error, count) => {
           if (error) rejects(error)
           else resolve(count)
+        })
+      })
+    },
+    getProducts: (root, { limit, offset }) => {
+      return Productos.find({})
+        .limit(limit)
+        .skip(offset)
+    },
+    getProduct: (root, { id }) => {
+      return new Promise((resolve, object) => {
+        Productos.findById(id, (error, producto) => {
+          if (error) rejects(error)
+          else resolve(producto)
         })
       })
     }
@@ -60,6 +73,42 @@ export const resolvers = {
     eliminarCliente: (root, { id }) => {
       return new Promise((resolve, object) => {
         Clientes.findOneAndDelete({ _id: id }, error => {
+          if (error) rejects(error)
+          else resolve('Se elimino Correctamente')
+        })
+      })
+    },
+    newProduct: (root, { input }) => {
+      const nuevoProducto = new Productos({
+        nombre: input.nombre,
+        precio: input.precio,
+        stock: input.stock
+      })
+      nuevoProducto.id = nuevoProducto._id
+
+      return new Promise((resolve, object) => {
+        nuevoProducto.save(error => {
+          if (error) rejects(error)
+          else resolve(nuevoProducto)
+        })
+      })
+    },
+    updateProduct: (root, { input }) => {
+      return new Promise((resolve, object) => {
+        Productos.findOneAndUpdate(
+          { _id: input.id },
+          input,
+          { new: true },
+          (error, producto) => {
+            if (error) rejects(error)
+            else resolve(producto)
+          }
+        )
+      })
+    },
+    deleteProduct: (root, { id }) => {
+      return new Promise((resolve, object) => {
+        Productos.findOneAndDelete({ _id: id }, error => {
           if (error) rejects(error)
           else resolve('Se elimino Correctamente')
         })

@@ -17,10 +17,20 @@ type Pedido {
   precio: Float
 }
 
+type Producto {
+  id: ID
+  nombre: String!
+  precio: Int!
+  stock: Int!
+}
+
 type Query {
   getClientes(limit: Int, offset: Int): [Cliente]
   getCliente(id: ID): Cliente
   totalClientes: String
+  #Products
+  getProducts(limit: Int, offset: Int): [Producto]
+  getProduct(id: ID): Producto
 }
 type Email {
   email: String
@@ -42,6 +52,14 @@ input ClienteInput {
   tipo: TipoCliente
   pedidos: [PedidoInput]
 }
+
+input ProductoInput {
+  id: ID
+  nombre: String!
+  precio: Int!
+  stock: Int!
+}
+
 """
 Mutations para crear nuevos clientes
 """
@@ -55,4 +73,9 @@ type Mutation {
   actualizarCliente(input: ClienteInput): Cliente
 
   eliminarCliente(id: ID!): String
+
+  #Productos
+  newProduct(input: ProductoInput): Producto
+  updateProduct(input: ProductoInput): Producto
+  deleteProduct(id: ID!): String
 }
